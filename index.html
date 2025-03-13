@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz with Certificate</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        .hidden { display: none; }
+        .question { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quiz with Digital Certificate</h1>
+        <div id="userForm">
+            <h2>Enter Your Details</h2>
+            <input id="name" placeholder="Name" required />
+            <input id="age" placeholder="Age" required />
+            <input id="college" placeholder="College Name" required />
+            <button onclick="startQuiz()">Start Quiz</button>
+        </div>
+        
+        <div id="quiz" class="hidden">
+            <h2>Quiz Questions</h2>
+            <form id="quizForm">
+                <div class="question">
+                    <p>1. What is the capital of India?</p>
+                    <input type="radio" name="q1" value="Delhi"> Delhi<br>
+                    <input type="radio" name="q1" value="Mumbai"> Mumbai<br>
+                </div>
+                <div class="question">
+                    <p>2. Who wrote the national anthem?</p>
+                    <input type="radio" name="q2" value="Tagore"> Tagore<br>
+                    <input type="radio" name="q2" value="Gandhi"> Gandhi<br>
+                </div>
+                <button type="button" onclick="submitQuiz()">Submit</button>
+            </form>
+        </div>
+        
+        <div id="result" class="hidden">
+            <h2>Quiz Completed!</h2>
+            <p id="score"></p>
+            <button onclick="generateCertificate()">Generate Participation Certificate</button>
+        </div>
+    </div>
+
+    <script>
+        function startQuiz() {
+            document.getElementById('userForm').classList.add('hidden');
+            document.getElementById('quiz').classList.remove('hidden');
+        }
+
+        function submitQuiz() {
+            document.getElementById('quiz').classList.add('hidden');
+            document.getElementById('result').classList.remove('hidden');
+            document.getElementById('score').innerText = 'Thank you for participating!';
+        }
+
+        function generateCertificate() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const name = document.getElementById('name').value;
+            const college = document.getElementById('college').value;
+
+            doc.setFontSize(22);
+            doc.text('Participation Certificate', 105, 30, null, null, 'center');
+            doc.setFontSize(16);
+            doc.text(`This is to certify that ${name}`, 105, 60, null, null, 'center');
+            doc.text(`from ${college} has successfully participated in the quiz.`, 105, 80, null, null, 'center');
+            doc.text('Organized by NSSO', 105, 100, null, null, 'center');
+            doc.text('Signature: Head of Department', 20, 140);
+            doc.text('Signature: Convenor', 140, 140);
+
+            doc.save(`${name}_Certificate.pdf`);
+        }
+    </script>
+</body>
+</html>
