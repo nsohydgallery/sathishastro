@@ -17,10 +17,12 @@
         <h1>Quiz with Digital Certificate</h1>
         <div id="userForm">
             <h2>Enter Your Details</h2>
-            <input id="name" placeholder="Name" required />
-            <input id="age" placeholder="Age" required />
-            <input id="college" placeholder="College Name" required />
-            <button onclick="startQuiz()">Start Quiz</button>
+            <form id="userDetailsForm" onsubmit="event.preventDefault(); startQuiz();">
+                <input id="name" placeholder="Name" required />
+                <input id="age" placeholder="Age" required />
+                <input id="college" placeholder="College Name" required />
+                <button type="submit">Start Quiz</button>
+            </form>
         </div>
         
         <div id="quiz" class="hidden">
@@ -49,8 +51,19 @@
 
     <script>
         function startQuiz() {
-            document.getElementById('userForm').classList.add('hidden');
-            document.getElementById('quiz').classList.remove('hidden');
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+            const college = document.getElementById('college').value;
+
+            console.log('Start Quiz Clicked'); // Log to see if function is triggered
+
+            if (name && age && college) {
+                console.log('All fields filled:', { name, age, college });
+                document.getElementById('userForm').classList.add('hidden');
+                document.getElementById('quiz').classList.remove('hidden');
+            } else {
+                alert('Please fill out all the details before starting the quiz.');
+            }
         }
 
         function submitQuiz() {
@@ -65,14 +78,33 @@
             const name = document.getElementById('name').value;
             const college = document.getElementById('college').value;
 
-            doc.setFontSize(22);
-            doc.text('Participation Certificate', 105, 30, null, null, 'center');
+            // Add background color and border
+            doc.setFillColor(230, 230, 250); // Light lavender background
+            doc.rect(0, 0, 210, 297, 'F');
+            doc.setDrawColor(0, 0, 0);
+            doc.setLineWidth(5);
+            doc.rect(5, 5, 200, 287);
+            
+            // Add certificate text
+            doc.setFontSize(28);
+            doc.text('Certificate of Participation ', 105, 70, null, null, 'center');
+            doc.setFontSize(20);
+            doc.text(`This is to certify that`, 105, 90, null, null, 'center');
+            
+            // Highlight and style participant's name
+            doc.setFontSize(24);
+            doc.setFont("courier", "italic");
+            doc.text(name, 105, 110, null, null, 'center');
+           // doc.line(60, 112, 150, 112); // Underline the name
+
+            doc.setFont("helvetica", "normal");
             doc.setFontSize(16);
-            doc.text(`This is to certify that ${name}`, 105, 60, null, null, 'center');
-            doc.text(`from ${college} has successfully participated in the quiz.`, 105, 80, null, null, 'center');
-            doc.text('Organized by NSSO', 105, 100, null, null, 'center');
-            doc.text('Signature: Head of Department', 20, 140);
-            doc.text('Signature: Convenor', 140, 140);
+            doc.text(`from ${college} has successfully participated in the quiz.`, 105, 130, null, null, 'center');
+            doc.text('Organized by NSSO', 105, 150, null, null, 'center');
+
+            // Add signature section
+            doc.text('Deputy Director General', 20, 240);
+            doc.text('Event Convenor', 140, 240);
 
             doc.save(`${name}_Certificate.pdf`);
         }
